@@ -1,8 +1,11 @@
 package com.microsoft.azure.functions.worker.broker;
 
+import com.google.gson.JsonSyntaxException;
+import com.microsoft.azure.functions.spi.inject.GsonInstance;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -127,7 +130,20 @@ public class JavaFunctionBroker {
 			Util.setGsonInstance(gsonInstanceInjector.getGsonInstance());
 			WorkerLogManager.getSystemLogger().info("Load gson instance injector: " + gsonInstanceInjector.getClass().getName());
 		}else {
-			Util.setGsonInstance(new Gson());
+			Util.setGsonInstance(new GsonInstance() {
+
+				private final Gson gson = new Gson();
+
+				@Override
+				public <T> T fromJson(String json, Type typeOfT) throws JsonSyntaxException {
+					return gson.fromJson(json, typeOfT);
+				}
+
+				@Override
+				public String toJson(Object src) {
+					return gson.toJson(src);
+				}
+			});
 			WorkerLogManager.getSystemLogger().info("Didn't find any gson instance injector, creating function class instance every invocation.");
 		}
 	}

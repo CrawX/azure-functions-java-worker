@@ -1,5 +1,6 @@
 package com.microsoft.azure.functions.worker.binding;
 
+import com.microsoft.azure.functions.spi.inject.GsonInstance;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +19,7 @@ public final class RpcJsonDataSource extends DataSource<String> {
 		super(name, value, JSON_DATA_OPERATIONS);
 	}
 
-	public static final Gson gson = Util.getGsonInstance();
+	public static final GsonInstance gson = Util.getGsonInstance();
 	public static final JsonParser gsonParser = new JsonParser();
 	private static final DataOperations<String, Object> JSON_DATA_OPERATIONS = new DataOperations<>();
 
