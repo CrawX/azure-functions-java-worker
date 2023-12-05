@@ -37,7 +37,8 @@ public class RpcStringDataSourceTest {
 
     @BeforeAll
     public static void setGsonInstance() {
-        Util.setGsonInstance(new Gson());
+        final Gson gson = new Gson();
+        Util.setGsonInstance(() -> gson);
     }
 
     @Test

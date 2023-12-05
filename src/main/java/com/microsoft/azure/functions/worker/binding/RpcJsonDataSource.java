@@ -18,13 +18,12 @@ public final class RpcJsonDataSource extends DataSource<String> {
 		super(name, value, JSON_DATA_OPERATIONS);
 	}
 
-	public static final Gson gson = Util.getGsonInstance();
 	public static final JsonParser gsonParser = new JsonParser();
 	private static final DataOperations<String, Object> JSON_DATA_OPERATIONS = new DataOperations<>();
 
 	public static Object convertToStringArrayOrList(String sourceValue, Type targetType) {
 		try {
-			return gson.fromJson(sourceValue, targetType);
+			return Util.getGsonInstance().fromJson(sourceValue, targetType);
 		} catch (JsonSyntaxException ex) {
 				List<String> jsonStringArrayList = new ArrayList<String>();
 				JsonArray array = gsonParser.parse(sourceValue).getAsJsonArray();

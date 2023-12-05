@@ -124,10 +124,17 @@ public class JavaFunctionBroker {
 		Iterator<GsonInstanceInjector> iterator = ServiceLoader.load(GsonInstanceInjector.class).iterator();
 		if (iterator.hasNext()) {
 			GsonInstanceInjector gsonInstanceInjector = iterator.next();
-			Util.setGsonInstance(gsonInstanceInjector.getGsonInstance());
+			Util.setGsonInstance(() -> {
+				try {
+					return gsonInstanceInjector.getGsonInstance();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			});
 			WorkerLogManager.getSystemLogger().info("Load gson instance injector: " + gsonInstanceInjector.getClass().getName());
 		}else {
-			Util.setGsonInstance(new Gson());
+			final Gson gson = new Gson();
+			Util.setGsonInstance(() -> gson);
 			WorkerLogManager.getSystemLogger().info("Didn't find any gson instance injector, creating function class instance every invocation.");
 		}
 	}

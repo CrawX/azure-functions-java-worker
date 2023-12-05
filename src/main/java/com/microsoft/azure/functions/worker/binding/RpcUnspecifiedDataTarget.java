@@ -2,6 +2,7 @@ package com.microsoft.azure.functions.worker.binding;
 
 import com.google.protobuf.ByteString;
 import com.microsoft.azure.functions.rpc.messages.TypedData;
+import com.microsoft.azure.functions.worker.Util;
 
 public final class RpcUnspecifiedDataTarget extends DataTarget {
 	public RpcUnspecifiedDataTarget() {
@@ -65,7 +66,7 @@ public final class RpcUnspecifiedDataTarget extends DataTarget {
 	public static TypedData.Builder toJsonData(Object value) throws Exception {
 		TypedData.Builder dataBuilder = TypedData.newBuilder();
 		if (value != null) {
-			dataBuilder.setJson(RpcJsonDataSource.gson.toJson(value));
+			dataBuilder.setJson(Util.getGsonInstance().toJson(value));
 		} else {
 			throw new IllegalArgumentException();
 		}

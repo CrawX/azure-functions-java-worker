@@ -1,5 +1,6 @@
 package com.microsoft.azure.functions.worker.binding;
 
+import com.microsoft.azure.functions.worker.Util;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -155,7 +156,7 @@ public class DataOperations<T, R> {
 		}
 		Object result = null;
 		try {
-			result = RpcJsonDataSource.gson.fromJson(sourceValue, targetType);
+			result = Util.getGsonInstance().fromJson(sourceValue, targetType);
 		} catch (JsonSyntaxException ex) {
 			if (Collection.class.isAssignableFrom(TypeUtils.getRawType(targetType, null)) || targetType.getClass().isArray()) {
 				result = RpcJsonDataSource.convertToStringArrayOrList(sourceValue, targetType);
@@ -175,7 +176,7 @@ public class DataOperations<T, R> {
 		JsonParser parser = new JsonParser();
 		JsonArray array = parser.parse(json).getAsJsonArray();
 		for (int i = 0; i < array.size(); i++) {
-			pojoList.add((T) RpcJsonDataSource.gson.fromJson(array.get(i), elementType));
+			pojoList.add((T) Util.getGsonInstance().fromJson(array.get(i), elementType));
 		}
 
 		return pojoList;
